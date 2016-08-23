@@ -5,41 +5,41 @@
 
 using namespace std;
 
-struct pos
+struct POS
 {
 public:
 	float x, y;
 	
-	pos()
+	POS()
 	{
 		x = 0; 
 		y = 0;
 	}
 
-	pos(float _x,float _y)
+	POS(float _x,float _y)
 	{
 		x = _x;
 		y = _y;
 	}
 	
-	friend pos operator + (pos _a, pos _b)
+	friend POS operator + (POS _a, POS _b)
 	{
-		return pos(_a.x + _b.x, _a.y + _b.y);
+		return POS(_a.x + _b.x, _a.y + _b.y);
 	}
 
-	friend pos operator - (pos _a, pos _b)
+	friend POS operator - (POS _a, POS _b)
 	{
-		return pos(_a.x - _b.x, _a.y - _b.y);
+		return POS(_a.x - _b.x, _a.y - _b.y);
 	}
 
-	friend pos operator / (pos _a, int _b)
+	friend POS operator / (POS _a, int _b)
 	{
-		return pos(_a.x / _b, _a.y / _b);
+		return POS(_a.x / _b, _a.y / _b);
 	}
 
-	friend pos operator * (pos _a, int _b)
+	friend POS operator * (POS _a, int _b)
 	{
-		return pos(_a.x * _b, _a.y * _b);
+		return POS(_a.x * _b, _a.y * _b);
 	}
 
 	void norm()

@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code.cpp" />
+    <ClCompile Include="gameplay.cpp" />
     <ClCompile Include="NeHeGL.cpp" />
     <ClCompile Include="samrrr_bibl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gameplay.h" />
     <ClInclude Include="NeHeGL.h" />
     <ClInclude Include="samrrr_bibl.h" />
   </ItemGroup>
