@@ -5,6 +5,39 @@
 
 using namespace std;
 
+struct PROPERTY
+{
+	float val;
+	float min, max;
+	
+	void add(float _x)
+	{
+		if (_x < 0)
+		{
+			val += _x;
+			if (val < min)
+				val = min;
+		}
+		else
+		{
+			val += _x;
+			if (val > max)
+				val = max;
+		}
+	}
+
+	void set(float _x)
+	{
+		val = _x;
+		if (val < min)
+			val = min;
+		if (val > max)
+			val = max;
+	}
+
+
+};
+
 struct POS
 {
 public:
@@ -62,6 +95,20 @@ struct M_ACTION
 {
 	int t;//1-lmd 2-lmu 3-rmd 4-rmu 5-mbd 6-mbu 7-scroll(i[0]) 8-move
 	int i[2];
+};
+
+class KEYBOARDINFO
+{
+	bool keys[512];
+	list <M_ACTION> l;
+	KEYBOARDINFO()
+	{
+		for (int i = 0; i < 512; i++)
+			keys[i] = 0;
+	}
+
+		l.pop_front();
+
 };
 
 class MOUSEINFO
@@ -142,7 +189,7 @@ public:
 			break;
 
 		}
-
+		l.pop_front();
 		return true;
 	}
 	//max_size
