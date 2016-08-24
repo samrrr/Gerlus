@@ -97,18 +97,46 @@ struct M_ACTION
 	int i[2];
 };
 
+struct K_ACTION
+{
+	int key;
+	int t;//1-down 0-up
+};
+
 class KEYBOARDINFO
 {
+public:
 	bool keys[512];
-	list <M_ACTION> l;
+	bool keysz[512];
+	list <K_ACTION> l;
 	KEYBOARDINFO()
 	{
 		for (int i = 0; i < 512; i++)
+		{
 			keys[i] = 0;
+			keysz[i] = 0;
+		}
 	}
-
+	void addaction(int _key, int _state)
+	{
+		if (_key < 0 || _key>=512)
+			return;
+		K_ACTION a;
+		a.key = _key;
+		a.t = _state;
+		l.push_back(a);
+	}
+	bool use_action()
+	{
+		if (l.empty())
+		{
+			return false;
+		}
+		K_ACTION a=*l.begin();
+		keysz[a.key] = keys[a.key];
+		keys[a.key] = a.t;
 		l.pop_front();
-
+	}
 };
 
 class MOUSEINFO
