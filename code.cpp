@@ -21,7 +21,7 @@
 #include <deque>
 
 #include "samrrr_bibl.h"
-
+#include "gameplay.h"
 #include "NeHeGL.h"														// Header File For NeHeGL
 
 #pragma comment( lib, "opengl32.lib" )									// Search For OpenGL32.lib While Linking
@@ -43,7 +43,7 @@ GLuint  base;      // База списка отображения для фонта
 HDC HDc;
 
 MOUSEINFO mouse;
-
+KEYBOARDINFO keyboard;
 
 using namespace std;
 
@@ -170,6 +170,8 @@ BOOL ChangeScreenResolution(int width, int height, int bitsPerPixel)	// Change T
 
 void ReshapeGL(int width, int height)									// Reshape The Window When It's Moved Or Resized
 {
+	if (height <= 0)
+		height = 1;
 	glViewport(0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode(GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity();													// Reset The Projection Matrix
@@ -515,19 +517,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:												// Update Keyboard Buffers For Keys Pressed
 		if ((wParam >= 0) && (wParam <= 255))						// Is Key (wParam) In A Valid Range?
 		{
-			/*
-			if (wParam == 'Q')
-			{
-				if (submenu == 0)
-				{
-					submenu = 1;
-				}
-				else{
-					submenu = 0;
-				}
+			keyboard.addaction(wParam, 1);
 
-			}
-			*/
 			window->keys->keyDown[wParam] = TRUE;					// Set The Selected Key (wParam) To True
 			return 0;												// Return
 		}
@@ -536,6 +527,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:													// Update Keyboard Buffers For Keys Released
 		if ((wParam >= 0) && (wParam <= 255))						// Is Key (wParam) In A Valid Range?
 		{
+			keyboard.addaction(wParam,0);
 			window->keys->keyDown[wParam] = FALSE;					// Set The Selected Key (wParam) To False
 			return 0;												// Return
 		}
@@ -571,9 +563,27 @@ BOOL RegisterWindowClass(Application* application)						// Register A Window Cla
 	return TRUE;														// Return True (Success)
 }
 
+void line(POS _p1,POS _p2)
+{
+	glColor4f(1, 0.7, 0.7, 1);
+	glBegin(GL_POINTS);
+	glVertex3f((_p2.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p2.y + 0.5) * 2 / razoky + 1, -1);
+	glEnd();
+	glBegin(GL_LINES);
+	glVertex3f((_p1.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p1.y + 0.5) * 2 / razoky + 1, -1);
+	glVertex3f((_p2.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p2.y + 0.5) * 2 / razoky + 1, -1);
+	glEnd();
+}
+
+void setcolor(float _r, float _g, float _b, float _a)
+{
+	glColor4f(_r,_g,_b,_a);
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	GP::init(DRAWS(line, setcolor));
+
 	int i, r, o, j;
 
 	Application			application;									// Window Structure
@@ -602,10 +612,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ZeroMemory(&keys, sizeof (Keys));									// Zero keys Structure
 
 	// Ask The User If They Want To Start In FullScreen Mode? (Remove These 4 Lines If You Want To Force Fullscreen)
-	if (MessageBox(HWND_DESKTOP, L"Would You Like To Run In Fullscreen Mode?", L"Start FullScreen?", MB_YESNO | MB_ICONQUESTION) == IDNO)
-	{
-		window.init.isFullScreen = FALSE;								// If Not, Run In Windowed Mode
+	if (MessageBox(HWND_DESKTOP, L"Would You Like To Run This?", L"Start this?", MB_YESNO | MB_ICONQUESTION) == IDNO)
+	{		
+		return 0;
 	}
+	window.init.isFullScreen = FALSE;
 
 	// Register A Class For Our Window To Use
 	if (RegisterWindowClass(&application) == FALSE)					// Did Registering A Class Fail?
@@ -991,6 +1002,7 @@ void Draw()
 
 	glPopMatrix();
 
+	GP::draw(razokx,razoky);
 		
 	glColor4f(1, 1, 1, 1);
 	glRasterPos3f(-razokx/(float)razoky, 0.95, -1);
@@ -1004,10 +1016,9 @@ void Draw()
 	for(i = 0; i < 40; i++)
 	{
 		glRasterPos3f(-razokx / (float)razoky, 0.95 - 0.05*i, -1);
-		glPrint("FFf344");
+		glPrint(".");
 	}
-	/*
-
+	
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 
@@ -1021,7 +1032,7 @@ void Draw()
 
 
 
-	*/
+	
 
 
 

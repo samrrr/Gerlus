@@ -3,6 +3,8 @@
 #include <stdlib.h>			// Header File For Standard Library
 #include <list>
 
+#pragma once;
+
 using namespace std;
 
 struct PROPERTY
@@ -136,6 +138,7 @@ public:
 		keysz[a.key] = keys[a.key];
 		keys[a.key] = a.t;
 		l.pop_front();
+		return true;
 	}
 };
 

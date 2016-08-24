@@ -11,6 +11,7 @@ struct STRUCTURE_DATA
 {
 	POS pos;
 	int t;
+	int type;
 	int col;
 	int r;
 	PROPERTY hp, en, rel, build;
@@ -43,11 +44,22 @@ struct STRUCTURE_INFO
 	
 };
 
-namespace GP
-{
-	void init();
-	void start(char* level_file);
-	void upd();
-	void draw();
+class DRAWS{
+public:
+	void(*line)(POS,POS);
+	void(*setcolor)(float,float,float,float);
+
+	DRAWS(void(*_line)(POS, POS), void(*_setcolor)(float, float, float, float))
+	{
+		line = _line;
+		setcolor = _setcolor;
+	}
 };
 
+namespace GP
+{
+	void init(DRAWS);
+	void start(char* level_file);
+	void upd(MOUSEINFO &_mouse,KEYBOARDINFO &_keyboard);
+	void draw(int,int);
+};
