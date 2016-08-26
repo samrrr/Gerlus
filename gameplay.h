@@ -25,7 +25,7 @@ struct STRUCTURE_INFO
 	float build_time;
 	float reload;//seconds
 	float r;
-	int type;//0-reactor 1-storage 2-laser 3-shooter 4-wawer 5-factory
+	int type;//0-reactor 1-storage 2-laser 3-shooter 4-wawer 5-factory 6-connect
 
 	float energygen;//
 	float energymax;//

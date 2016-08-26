@@ -171,7 +171,7 @@ void draw_str(int _x, int _y, int _r,int _t)
 			dd(&p1.x, &p1.y, c, _r*0.8);
 			dd(&p2.x, &p2.y, c + 30, _r*0.8);
 			setcolor(0, 0, 1, 1);
-			line(POS(_x, _y), POS(_x + p1.x, _y + p1.y));
+			//line(POS(_x, _y), POS(_x + p1.x, _y + p1.y));
 			setcolor(0,1,1,1);
 			triangle(POS(_x, _y), POS(_x + p1.x, _y + p1.y), POS(_x + p2.x, _y + p2.y));
 
@@ -216,7 +216,7 @@ void init(DRAWS _draws)
 
 	i = 1;
 
-	str_info[i].type = 0;
+	str_info[i].type = 1;
 	str_info[i].connectcap = 50;
 	str_info[i].connectlength = 50;
 	str_info[i].connectone = 0;
@@ -312,8 +312,17 @@ bool add_structure(POS _p,int _t,int _col,int _build = 0)
 
 		if (b)
 		{
-			structure[j].c[r].id = i;
-			r++;
+			a = -1;
+			for (o = 0; o < 20; o++)
+			if (structure[i].c[o].id == -1)
+				a = o;
+
+			if (a != -1)
+			{
+				structure[i].c[a].id = j;
+				structure[j].c[r].id = i;
+				r++;
+			}
 		}
 	}
 
@@ -343,6 +352,20 @@ void upd_m(MOUSEINFO &_mouse)
 	}
 }
 
+void add_en_line(int _i1, int _i2,float en)
+{
+	for (int i1 = 0; i1 < 20; i1++)
+		if (structure[_i1].c[i1].id == _i2)
+		{
+			structure[_i1].c[i1].en += en;
+		}
+	for (int i1 = 0; i1 < 20; i1++)
+		if (structure[_i2].c[i1].id == _i1)
+		{
+			structure[_i2].c[i1].en += en;
+		}
+}
+
 void upd(MOUSEINFO &_mouse, KEYBOARDINFO &_keyboard)
 {
 	while (_mouse.use_action())
@@ -359,6 +382,80 @@ void upd(MOUSEINFO &_mouse, KEYBOARDINFO &_keyboard)
 	
 	mouse.x = _mouse.x;
 	mouse.y = _mouse.y;
+
+
+
+
+
+
+
+	for (int i1 = 0; i1 < 1024; i1++)
+	if (structure[i1].t != -1)
+	for (int i2 = 0; i2 < 20; i2++)
+	if (structure[i1].c[i2].id != -1)
+		structure[i1].c[i2].en = 0;
+
+
+	//reactor-store
+	for (int i1 = 0; i1 < 1024; i1++)
+	if (structure[i1].t != -1)
+	if (structure[i1].type == 0)
+	{
+		int m[1024];
+		for (int i2 = 0; i2 < 1024; i2++)
+			m[i2] = -1;
+
+		int poin[1024];
+		int fr, la,res;
+		fr = 0;
+		la = 1;
+
+		poin[0] = i1;
+		m[i1] = 0;
+		res = 0;
+
+		for (; fr != la;)
+		{
+
+
+			for (int i2 = 0; i2 < 20; i2++)
+			if (structure[poin[fr]].c[i2].id != -1)
+			if (m[structure[poin[fr]].c[i2].id] == -1)
+			{
+				m[structure[poin[fr]].c[i2].id] = m[poin[fr]] + 1;
+				poin[la] = structure[poin[fr]].c[i2].id;
+				la = (la + 1) % 1024;
+			}
+			if (structure[poin[fr]].type == 1)
+			{
+				la = fr;
+				res = 1;
+			}
+			else
+			{
+				fr = (fr + 1) % 1024;
+			}
+		}
+
+		if (res == 1)
+		{
+			int st = poin[fr];
+			for (int i3 = m[st]+1; i3 >= 0; i3--)
+			for (int i2 = 0; i2 < 20; i2++)
+			if (structure[st].c[i2].id != -1)
+				if (m[st]>m[structure[st].c[i2].id])
+			{
+				add_en_line(st, structure[st].c[i2].id,1);
+				st = structure[st].c[i2].id;
+				i2 = 20;
+			}
+				
+		}
+
+
+	}
+
+
 
 
 
@@ -403,6 +500,10 @@ void draw(int _razokx,int _razoky)
 
 				setcolor(0.3 + 0.7*v, 0.3 + 0.7*v, 0.3 + 0.7*v, 1);
 
+				if (structure[i].c[r].en == 0)
+				{
+					setcolor(0,1,0, 1);
+				}
 
 				line(p1,p2);
 			}
