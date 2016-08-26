@@ -565,7 +565,6 @@ BOOL RegisterWindowClass(Application* application)						// Register A Window Cla
 
 void line(POS _p1,POS _p2)
 {
-	glColor4f(1, 0.7, 0.7, 1);
 	glBegin(GL_POINTS);
 	glVertex3f((_p2.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p2.y + 0.5) * 2 / razoky + 1, -1);
 	glEnd();
@@ -580,9 +579,18 @@ void setcolor(float _r, float _g, float _b, float _a)
 	glColor4f(_r,_g,_b,_a);
 }
 
+void triangle(POS _p1, POS _p2, POS _p3)
+{
+	glBegin(GL_POLYGON);
+	glVertex3f((_p1.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p1.y + 0.5) * 2 / razoky + 1, -1);
+	glVertex3f((_p2.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p2.y + 0.5) * 2 / razoky + 1, -1);
+	glVertex3f((_p3.x + 0.5) * 2 / razoky - razokx / (float)razoky, -(_p3.y + 0.5) * 2 / razoky + 1, -1);
+	glEnd();
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	GP::init(DRAWS(line, setcolor));
+	GP::init(DRAWS(line, setcolor, triangle));
 
 	int i, r, o, j;
 
@@ -602,7 +610,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// Window Title
 	window.init.title = "Eufloria 2";		// Tutorial Title
-
+	
+	razokx -= 10;
+	razoky -= 100;
 
 	window.init.width = razokx;									// Window Width
 	window.init.height = razoky;									// Window Height
@@ -1002,6 +1012,8 @@ void Draw()
 
 	glPopMatrix();
 
+	GP::upd(mouse, keyboard);
+	glColor4f(1, 1, 1, 1);
 	GP::draw(razokx,razoky);
 		
 	glColor4f(1, 1, 1, 1);
@@ -1022,7 +1034,7 @@ void Draw()
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_DEPTH_TEST);
 
-	glColor4f(1, 0.7, 0.7, 1);
+	glColor4f(1, 1, 1, 1);
 	glBegin(GL_LINES);
 	glVertex3f(-0.1, 0, -1);
 	glVertex3f(0.1, 0, -1);

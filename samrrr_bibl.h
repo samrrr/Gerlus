@@ -67,12 +67,12 @@ public:
 		return POS(_a.x - _b.x, _a.y - _b.y);
 	}
 
-	friend POS operator / (POS _a, int _b)
+	friend POS operator / (POS _a, float _b)
 	{
 		return POS(_a.x / _b, _a.y / _b);
 	}
 
-	friend POS operator * (POS _a, int _b)
+	friend POS operator * (POS _a, float _b)
 	{
 		return POS(_a.x * _b, _a.y * _b);
 	}
@@ -197,19 +197,19 @@ public:
 			bl = 1;
 			break;
 		case 2:
-			bl = 2;
+			bl = 0;
 			break;
 		case 3:
 			br = 1;
 			break;
 		case 4:
-			br = 2;
+			br = 0;
 			break;
 		case 5:
 			bm = 1;
 			break;
 		case 6:
-			bm = 2;
+			bm = 0;
 			break;
 		case 7:
 			scroll = a.i[0];

@@ -47,12 +47,14 @@ struct STRUCTURE_INFO
 class DRAWS{
 public:
 	void(*line)(POS,POS);
-	void(*setcolor)(float,float,float,float);
+	void(*setcolor)(float, float, float, float);
+	void(*triangle)(POS, POS, POS);
 
-	DRAWS(void(*_line)(POS, POS), void(*_setcolor)(float, float, float, float))
+	DRAWS(void(*_line)(POS, POS), void(*_setcolor)(float, float, float, float), void(*_triangle)(POS, POS, POS))
 	{
 		line = _line;
 		setcolor = _setcolor;
+		triangle = _triangle;
 	}
 };
 
